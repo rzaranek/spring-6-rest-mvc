@@ -8,5 +8,5 @@ import java.util.UUID;
  * Created by robertZ on 2024-01-07.
  */
 public interface BeerService {
-    Beer getBeer(UUID id);
+    Beer getBeerById(UUID id);
 }

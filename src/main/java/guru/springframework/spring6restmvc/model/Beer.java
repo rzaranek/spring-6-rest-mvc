@@ -16,10 +16,10 @@ public class Beer {
     private UUID id;
     private Integer version;
     private String beerName;
-    private BeerStryle beerStryle;
+    private BeerStyle beerStyle;
     private String upc;
     private Integer quantityOnHand;
     private BigDecimal price;
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 }
