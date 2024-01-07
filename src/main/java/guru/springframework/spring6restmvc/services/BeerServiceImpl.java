@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by robertZ on 2024-01-07.
@@ -15,20 +15,62 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class BeerServiceImpl implements BeerService {
-    @Override
-    public Beer getBeerById(UUID id) {
 
-        log.debug("BeerService create Beer by ID " + id);
+    private Map<UUID, Beer> beerMap;
 
-        return Beer.builder()
-                .id(id)
+    public BeerServiceImpl() {
+
+        beerMap = new HashMap<>();
+
+        Beer beer1 = Beer.builder()
+                .id(UUID.randomUUID())
                 .beerName("Hora")
                 .beerStyle(BeerStyle.PILSNER)
-                .upc("upc")
+                .upc("aa1")
                 .quantityOnHand(22)
                 .price(BigDecimal.valueOf(12.21))
                 .createdDate(LocalDateTime.now())
                 .updateDate(LocalDateTime.now().plusDays(10))
                 .build();
+
+        beerMap.put(beer1.getId(), beer1);
+
+        Beer beer2 = Beer.builder()
+                .id(UUID.randomUUID())
+                .beerName("Hora")
+                .beerStyle(BeerStyle.PILSNER)
+                .upc("bb2")
+                .quantityOnHand(47)
+                .price(BigDecimal.valueOf(8.10))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now().plusDays(10))
+                .build();
+
+        beerMap.put(beer2.getId(), beer2);
+
+        Beer beer3 = Beer.builder()
+                .id(UUID.randomUUID())
+                .beerName("Żywiec")
+                .beerStyle(BeerStyle.PILSNER)
+                .upc("cc3")
+                .quantityOnHand(5)
+                .price(BigDecimal.valueOf(9.99))
+                .createdDate(LocalDateTime.now())
+                .updateDate(LocalDateTime.now().plusDays(10))
+                .build();
+
+        beerMap.put(beer3.getId(), beer3);
+
+    }
+
+    @Override
+    public List<Beer> listBeers(){
+        return new ArrayList<>(beerMap.values());
+    }
+
+    @Override
+    public Beer getBeerById(UUID id) {
+
+        return beerMap.get(id);
     }
 }
