@@ -36,17 +36,23 @@ public class CustomerController {
 
         Customer savedCustomer = customerService.savedNewCustomer(customer);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Localization", "/api/v1/customer/"+savedCustomer.getId());
+        headers.add("Localization", "/api/v1/customer/" + savedCustomer.getId());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
     }
 
     @PutMapping("{customerId}")
-    public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer){
+    public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
 
         customerService.updateById(customerId, customer);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
 
+    }
+
+    @DeleteMapping("{customerId}")
+    public ResponseEntity deleteCustomerById(@PathVariable("customerId") UUID customerId) {
+        customerService.deleteById(customerId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
