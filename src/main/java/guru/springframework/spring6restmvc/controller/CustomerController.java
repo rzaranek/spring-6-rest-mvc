@@ -26,14 +26,6 @@ public class CustomerController {
         return customerService.listCustomers();
     }
 
-    @PatchMapping("{idCustomer}")
-    public ResponseEntity updatePatchById(@PathVariable("idCustomer") UUID idCustomer, @RequestBody Customer customer){
-        customerService.patchCustomerById(idCustomer, customer);
-
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
-
-    }
-
     @RequestMapping(value = "{customerId}", method = RequestMethod.GET)
     public Customer getCustomerById(@PathVariable("customerId") UUID customerId) {
         return customerService.getCustomerById(customerId);
@@ -53,6 +45,14 @@ public class CustomerController {
     public ResponseEntity updateCustomerById(@PathVariable("customerId") UUID customerId, @RequestBody Customer customer) {
 
         customerService.updateById(customerId, customer);
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+
+    }
+
+    @PatchMapping("{idCustomer}")
+    public ResponseEntity updatePatchById(@PathVariable("idCustomer") UUID idCustomer, @RequestBody Customer customer){
+        customerService.patchCustomerById(idCustomer, customer);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
 
