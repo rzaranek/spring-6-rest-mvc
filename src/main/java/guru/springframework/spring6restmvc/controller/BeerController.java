@@ -3,6 +3,7 @@ package guru.springframework.spring6restmvc.controller;
 import guru.springframework.spring6restmvc.model.Beer;
 import guru.springframework.spring6restmvc.services.BeerService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,12 +17,20 @@ import java.util.UUID;
  * Created by robertZ on 2024-01-07.
  */
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/beer")
 public class BeerController {
 
     private final BeerService beerService;
+
+    @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
+    Beer getBeerById(@PathVariable("beerId") UUID beerId) {
+
+        log.debug("Get Beer By ID - in controller " + beerId);
+
+        return beerService.getBeerById(beerId);
+    }
 
     @PatchMapping("{beerId}")
     public ResponseEntity updateBeerPatchById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
@@ -60,13 +69,5 @@ public class BeerController {
     @RequestMapping(method = RequestMethod.GET)
     List<Beer> listBeers() {
         return beerService.listBeers();
-    }
-
-    @RequestMapping(value = "{beerId}", method = RequestMethod.GET)
-    Beer getBeerById(@PathVariable("beerId") UUID beerId) {
-
-        log.debug("Get Beer By ID - in controller " + beerId);
-
-        return beerService.getBeerById(beerId);
     }
 }
