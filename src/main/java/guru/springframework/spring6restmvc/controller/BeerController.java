@@ -32,6 +32,11 @@ public class BeerController {
         return beerService.getBeerById(beerId);
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    List<Beer> listBeers() {
+        return beerService.listBeers();
+    }
+
     @PatchMapping("{beerId}")
     public ResponseEntity updateBeerPatchById(@PathVariable("beerId") UUID beerId, @RequestBody Beer beer){
 
@@ -64,10 +69,5 @@ public class BeerController {
         headers.add("Location", "/api/v1/beer/" + savedBeer.getId());
 
         return new ResponseEntity(headers, HttpStatus.CREATED);
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    List<Beer> listBeers() {
-        return beerService.listBeers();
     }
 }
