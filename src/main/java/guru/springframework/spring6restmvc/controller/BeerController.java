@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -27,12 +28,18 @@ public class BeerController {
 
     private final BeerService beerService;
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity handlerNotFound(){
+        System.out.println("In Beer Exception Handler");
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping(value = BEER_PATH_ID)
     Beer getBeerById(@PathVariable(BEER_ID) UUID beerId) {
 
         log.debug("Get Beer By ID - in controller " + beerId);
 
-        return beerService.getBeerById(beerId);
+        return beerService.getBeerById(beerId).orElseThrow(NotFoundException::new);
     }
 
     @GetMapping(value = BEER_PATH)
