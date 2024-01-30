@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
-import guru.springframework.spring6restmvc.model.Beer;
+import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,13 +17,13 @@ import java.util.*;
 @Service
 public class BeerServiceImpl implements BeerService {
 
-    private Map<UUID, Beer> beerMap;
+    private Map<UUID, BeerDTO> beerMap;
 
     public BeerServiceImpl() {
 
         beerMap = new HashMap<>();
 
-        Beer beer1 = Beer.builder()
+        BeerDTO beer1 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .beerName("Hora")
                 .beerStyle(BeerStyle.PILSNER)
@@ -36,7 +36,7 @@ public class BeerServiceImpl implements BeerService {
 
         beerMap.put(beer1.getId(), beer1);
 
-        Beer beer2 = Beer.builder()
+        BeerDTO beer2 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .beerName("Hora")
                 .beerStyle(BeerStyle.PILSNER)
@@ -49,7 +49,7 @@ public class BeerServiceImpl implements BeerService {
 
         beerMap.put(beer2.getId(), beer2);
 
-        Beer beer3 = Beer.builder()
+        BeerDTO beer3 = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .beerName("Żywiec")
                 .beerStyle(BeerStyle.PILSNER)
@@ -65,19 +65,19 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public List<Beer> listBeers(){
+    public List<BeerDTO> listBeers(){
         return new ArrayList<>(beerMap.values());
     }
 
     @Override
-    public Optional<Beer> getBeerById(UUID id) {
+    public Optional<BeerDTO> getBeerById(UUID id) {
         return beerMap.get(id) == null ? Optional.empty() : Optional.of(beerMap.get(id));
     }
 
     @Override
-    public Beer saveNewBeer(Beer beer) {
+    public BeerDTO saveNewBeer(BeerDTO beer) {
 
-        Beer createBeer = Beer.builder()
+        BeerDTO createBeer = BeerDTO.builder()
                 .id(UUID.randomUUID())
                 .beerName(beer.getBeerName())
                 .beerStyle(beer.getBeerStyle())
@@ -94,9 +94,9 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void updateBeerById(UUID beerId, Beer beer) {
+    public void updateBeerById(UUID beerId, BeerDTO beer) {
 
-        Beer beerUpdated = beerMap.get(beerId);
+        BeerDTO beerUpdated = beerMap.get(beerId);
 
         beerUpdated.setBeerName(beer.getBeerName());
         beerUpdated.setBeerStyle(beer.getBeerStyle());
@@ -113,8 +113,8 @@ public class BeerServiceImpl implements BeerService {
     }
 
     @Override
-    public void patchBeerById(UUID beerId, Beer beer) {
-        Beer updateteBeer = beerMap.get(beerId);
+    public void patchBeerById(UUID beerId, BeerDTO beer) {
+        BeerDTO updateteBeer = beerMap.get(beerId);
 
         if (StringUtils.hasText(beer.getBeerName()))
             updateteBeer.setBeerName(beer.getBeerName());

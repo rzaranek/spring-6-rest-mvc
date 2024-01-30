@@ -1,8 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
-import guru.springframework.spring6restmvc.model.Beer;
+import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.services.BeerService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -11,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -35,7 +33,7 @@ public class BeerController {
     }
 
     @GetMapping(value = BEER_PATH_ID)
-    Beer getBeerById(@PathVariable(BEER_ID) UUID beerId) {
+    BeerDTO getBeerById(@PathVariable(BEER_ID) UUID beerId) {
 
         log.debug("Get Beer By ID - in controller " + beerId);
 
@@ -43,12 +41,12 @@ public class BeerController {
     }
 
     @GetMapping(value = BEER_PATH)
-    List<Beer> listBeers() {
+    List<BeerDTO> listBeers() {
         return beerService.listBeers();
     }
 
     @PatchMapping(value = BEER_PATH_ID)
-    public ResponseEntity updateBeerPatchById(@PathVariable(BEER_ID) UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity updateBeerPatchById(@PathVariable(BEER_ID) UUID beerId, @RequestBody BeerDTO beer) {
 
         beerService.patchBeerById(beerId, beer);
 
@@ -62,7 +60,7 @@ public class BeerController {
     }
 
     @PutMapping(BEER_PATH_ID)
-    public ResponseEntity updateById(@PathVariable(BEER_ID) UUID beerId, @RequestBody Beer beer) {
+    public ResponseEntity updateById(@PathVariable(BEER_ID) UUID beerId, @RequestBody BeerDTO beer) {
 
         beerService.updateBeerById(beerId, beer);
 
@@ -71,9 +69,9 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    public ResponseEntity handlePoste(@RequestBody Beer beer) {
+    public ResponseEntity handlePoste(@RequestBody BeerDTO beer) {
 
-        Beer savedBeer = beerService.saveNewBeer(beer);
+        BeerDTO savedBeer = beerService.saveNewBeer(beer);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", BEER_PATH + "/" + savedBeer.getId());

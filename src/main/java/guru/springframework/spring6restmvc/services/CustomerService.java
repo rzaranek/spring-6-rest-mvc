@@ -1,6 +1,6 @@
 package guru.springframework.spring6restmvc.services;
 
-import guru.springframework.spring6restmvc.model.Customer;
+import guru.springframework.spring6restmvc.model.CustomerDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,13 +10,13 @@ import java.util.UUID;
  * Created by robertZ on 2024-01-09.
  */
 public interface CustomerService {
-    List<Customer> listCustomers();
-    Optional<Customer> getCustomerById(UUID id);
-    Customer savedNewCustomer(Customer customer);
+    List<CustomerDTO> listCustomers();
+    Optional<CustomerDTO> getCustomerById(UUID id);
+    CustomerDTO savedNewCustomer(CustomerDTO customer);
 
-    void updateById(UUID customerId, Customer customer);
+    void updateById(UUID customerId, CustomerDTO customer);
 
     void deleteById(UUID customerId);
 
-    void patchCustomerById(UUID idCustomer, Customer customer);
+    void patchCustomerById(UUID idCustomer, CustomerDTO customer);
 }

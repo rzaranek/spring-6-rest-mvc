@@ -1,14 +1,12 @@
 package guru.springframework.spring6restmvc.services;
 
-import guru.springframework.spring6restmvc.model.Beer;
+import guru.springframework.spring6restmvc.model.BeerDTO;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Created by robertZ on 2024-01-30.
@@ -21,9 +19,9 @@ class BeerServiceTest {
     @Test
     void getBeerById() {
 
-        Beer beer = beerService.listBeers().get(0);
+        BeerDTO beer = beerService.listBeers().get(0);
 
-        Beer beerFound = beerService.getBeerById(beer.getId()).get();
+        BeerDTO beerFound = beerService.getBeerById(beer.getId()).get();
 
         assertThat(beerFound).isEqualTo(beer);
     }
