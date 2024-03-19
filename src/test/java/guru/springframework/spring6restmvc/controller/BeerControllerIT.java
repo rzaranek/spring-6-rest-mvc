@@ -2,13 +2,18 @@ package guru.springframework.spring6restmvc.controller;
 
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.model.BeerDTO;
+import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +30,28 @@ class BeerControllerIT {
     BeerRepository beerRepository;
     @Autowired
     BeerController beerController;
+
+    @Transactional
+    @Rollback
+    @Test
+    void saveNewBeerTest() {
+        BeerDTO newBeer = BeerDTO.builder()
+                .beerName("Strong")
+                .beerStyle(BeerStyle.PORTER)
+                .price(BigDecimal.valueOf(14.5))
+                .build();
+
+        ResponseEntity responseEntity = beerController.handlePoste(newBeer);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(201));
+        assertThat(responseEntity.getHeaders().getLocation()).isNotNull();
+
+        String[] locationUUID = responseEntity.getHeaders().getLocation().getPath().split("/");
+        UUID savedUUID = UUID.fromString(locationUUID[4]);
+
+        Beer beer = beerRepository.findById(savedUUID).get();
+        assertThat(beer).isNotNull();
+    }
 
     @Test
     void testBeerIsNotFound() {
