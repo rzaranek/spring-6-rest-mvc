@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
 import guru.springframework.spring6restmvc.entities.Beer;
+import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
@@ -30,6 +31,31 @@ class BeerControllerIT {
     BeerRepository beerRepository;
     @Autowired
     BeerController beerController;
+    @Autowired
+    BeerMapper beerMapper;
+
+    @Test
+    void testUpdateNotFoundFound() {
+        assertThrows(NotFoundException.class, () -> {
+           beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
+        });
+    }
+
+    @Test
+    void updateExistingBeer() {
+        BeerDTO beerDTO = beerMapper.beerToBeerDto(beerRepository.findAll().get(0));
+        UUID beerId = beerDTO.getId();
+        beerDTO.setId(null);
+        beerDTO.setVersion(null);
+        final String newBeerName = "VeryStrongBeer";
+        beerDTO.setBeerName(newBeerName);
+
+        ResponseEntity responseEntity = beerController.updateById(beerId, beerDTO);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        assertThat(beerRepository.findById(beerId).get().getBeerName()).isEqualTo(newBeerName);
+    }
 
     @Transactional
     @Rollback

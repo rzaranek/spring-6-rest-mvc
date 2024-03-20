@@ -27,7 +27,7 @@ public class BeerController {
     private final BeerService beerService;
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handlerNotFound(){
+    public ResponseEntity handlerNotFound() {
         System.out.println("In Beer Exception Handler");
         return ResponseEntity.notFound().build();
     }
@@ -62,10 +62,11 @@ public class BeerController {
     @PutMapping(BEER_PATH_ID)
     public ResponseEntity updateById(@PathVariable(BEER_ID) UUID beerId, @RequestBody BeerDTO beer) {
 
-        beerService.updateBeerById(beerId, beer);
+        if (beerService.updateBeerById(beerId, beer).isEmpty()) {
+            throw new NotFoundException();
+        }
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
-
     }
 
     @PostMapping(BEER_PATH)
