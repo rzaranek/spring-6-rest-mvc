@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,6 +28,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest
 class BeerControllerIT {
 
+    public static final BigDecimal PRICE = BigDecimal.valueOf(6.32);
+    public static final String BEER_NAME = "NEW Beer";
+    public static final int QUANTITY_ON_HAND = 22;
     @Autowired
     BeerRepository beerRepository;
     @Autowired
@@ -133,5 +137,33 @@ class BeerControllerIT {
         List<BeerDTO> beerDTOList = beerController.listBeers();
 
         assertThat(beerDTOList.size()).isEqualTo(0);
+    }
+
+    @Transactional
+    @Rollback
+    @Test
+    void patchBeerById() {
+        Beer beer = beerRepository.findAll().get(0);
+        beer.setBeerStyle(BeerStyle.LAGER);
+        beer.setPrice(PRICE);
+        beer.setBeerName(BEER_NAME);
+        beer.setQuantityOnHand(QUANTITY_ON_HAND);
+
+        ResponseEntity responseEntity = beerController.updateBeerPatchById(beer.getId(), beerMapper.beerToBeerDto(beer));
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(204));
+
+        Beer savedBeer = beerRepository.findById(beer.getId()).get();
+
+        assertThat(savedBeer.getBeerName()).isEqualTo(BEER_NAME);
+        assertThat(savedBeer.getBeerStyle()).isEqualTo(BeerStyle.LAGER);
+        assertThat(savedBeer.getPrice()).isEqualTo(PRICE);
+        assertThat(savedBeer.getQuantityOnHand()).isEqualTo(QUANTITY_ON_HAND);
+
+    }
+
+    @Test
+    void pathcBeerByIdNotFound() {
+        assertThrows(NotFoundException.class, () ->
+            beerController.updateBeerPatchById(UUID.randomUUID(), BeerDTO.builder().build()));
     }
 }
