@@ -166,6 +166,7 @@ class BeerControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(beerDTO)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.length()", is(2)))
                 .andReturn();
 
         System.out.println(mvcResult.getResponse().getContentAsString());
