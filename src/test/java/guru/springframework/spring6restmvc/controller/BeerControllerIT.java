@@ -63,10 +63,9 @@ class BeerControllerIT {
     void testPatchBeerBadName() throws Exception {
 
         Beer beer = beerRepository.findAll().get(0);
-//        beer.setBeerName("New Beer Name Too Long 0123456789+0123456789+0123456789+0123456789+0123456789");
 
         Map<String, Object> beerMap = new HashMap<>();
-        beerMap.put("beerName", "New Beer Name Too Long 0123456789+0123456789+0123456789+0123456789+0123456789+0123456789+0123456789+0123456789+0123456789");
+        beerMap.put("beerName", "New Beer Name Too Long 0123456789+0123456789+0123456789+0123456789+0123456789");
 
         mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)

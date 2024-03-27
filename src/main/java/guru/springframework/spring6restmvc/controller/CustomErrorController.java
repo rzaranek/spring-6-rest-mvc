@@ -1,6 +1,7 @@
 package guru.springframework.spring6restmvc.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,11 @@ import java.util.Map;
  */
 @ControllerAdvice
 public class CustomErrorController {
+
+    @ExceptionHandler
+    ResponseEntity handelJPAViolations(TransactionSystemException exception){
+        return ResponseEntity.badRequest().build();
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity handelBindErrors(MethodArgumentNotValidException exception) {
