@@ -1,13 +1,11 @@
 package guru.springframework.spring6restmvc.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.mappers.BeerMapper;
 import guru.springframework.spring6restmvc.model.BeerDTO;
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import guru.springframework.spring6restmvc.repositories.BeerRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.math.BigDecimal;
@@ -67,11 +67,15 @@ class BeerControllerIT {
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("beerName", "New Beer Name Too Long 0123456789+0123456789+0123456789+0123456789+0123456789");
 
-        mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
+        MvcResult result = mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(beerMap)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+//                .andExpect((ResultMatcher) jsonPath("$.length()", is(1)))
+                .andReturn();
+
+        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
