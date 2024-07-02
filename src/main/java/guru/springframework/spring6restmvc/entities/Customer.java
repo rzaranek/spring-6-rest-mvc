@@ -28,6 +28,10 @@ public class Customer {
     @Version
     private Integer version;
     private String name;
+
+    @Column(length = 255)
+    private String email;
+
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
 }
