@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -26,9 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static org.hamcrest.core.Is.is;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -60,6 +64,14 @@ class BeerControllerIT {
     }
 
     @Test
+    void testListBeerByName() throws Exception {
+        mockMvc.perform(get(BeerController.BEER_PATH)
+                        .queryParam("beerName", "IPA"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(2413)));
+    }
+
+    @Test
     void testPatchBeerBadName() throws Exception {
 
         Beer beer = beerRepository.findAll().get(0);
@@ -68,9 +80,9 @@ class BeerControllerIT {
         beerMap.put("beerName", "New Beer Name Too Long 0123456789+0123456789+0123456789+0123456789+0123456789");
 
         MvcResult result = mockMvc.perform(patch(BeerController.BEER_PATH_ID, beer.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(beerMap)))
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(beerMap)))
                 .andExpect(status().isBadRequest())
 //                .andExpect((ResultMatcher) jsonPath("$.length()", is(1)))
                 .andReturn();
@@ -100,7 +112,7 @@ class BeerControllerIT {
     @Test
     void testUpdateNotFoundFound() {
         assertThrows(NotFoundException.class, () -> {
-           beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
+            beerController.updateById(UUID.randomUUID(), BeerDTO.builder().build());
         });
     }
 
@@ -164,7 +176,7 @@ class BeerControllerIT {
     @Test
     void testListBeers() {
         //given
-        List<BeerDTO> beerDTOList = beerController.listBeers();
+        List<BeerDTO> beerDTOList = beerController.listBeers(null);
 
         assertThat(beerDTOList.size()).isEqualTo(2413);
     }
@@ -174,7 +186,7 @@ class BeerControllerIT {
     @Test
     void testEmptyList() {
         beerRepository.deleteAll();
-        List<BeerDTO> beerDTOList = beerController.listBeers();
+        List<BeerDTO> beerDTOList = beerController.listBeers(null);
 
         assertThat(beerDTOList.size()).isEqualTo(0);
     }
@@ -204,6 +216,6 @@ class BeerControllerIT {
     @Test
     void pathcBeerByIdNotFound() {
         assertThrows(NotFoundException.class, () ->
-            beerController.updateBeerPatchById(UUID.randomUUID(), BeerDTO.builder().build()));
+                beerController.updateBeerPatchById(UUID.randomUUID(), BeerDTO.builder().build()));
     }
 }
