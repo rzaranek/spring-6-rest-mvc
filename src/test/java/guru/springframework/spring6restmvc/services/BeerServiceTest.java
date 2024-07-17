@@ -19,7 +19,7 @@ class BeerServiceTest {
     @Test
     void getBeerById() {
 
-        BeerDTO beer = beerService.listBeers().get(0);
+        BeerDTO beer = beerService.listBeers(null).get(0);
 
         BeerDTO beerFound = beerService.getBeerById(beer.getId()).get();
 
