@@ -3,9 +3,10 @@ package guru.springframework.spring6restmvc.repositories;
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.model.BeerStyle;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -13,7 +14,9 @@ import java.util.UUID;
  */
 public interface BeerRepository extends JpaRepository<Beer, UUID> {
 
-    List<Beer> findAllByBeerNameIsLikeIgnoreCase(@NotNull String beerName);
-    List<Beer> findAllByBeerStyle(@NotNull BeerStyle beerStyle);
-    List<Beer> findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle(@NotNull String beerName, @NotNull BeerStyle beerStyle);
+
+    Page<Beer> findAll(Pageable pageable);
+    Page<Beer> findAllByBeerNameIsLikeIgnoreCase(@NotNull String beerName, Pageable pageable);
+    Page<Beer> findAllByBeerStyle(@NotNull BeerStyle beerStyle, Pageable pageable);
+    Page<Beer> findAllByBeerNameIsLikeIgnoreCaseAndBeerStyle(@NotNull String beerName, @NotNull BeerStyle beerStyle, Pageable pageable);
 }
