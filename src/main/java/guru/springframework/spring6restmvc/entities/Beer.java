@@ -14,6 +14,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -50,6 +51,9 @@ public class Beer  {
     @Size(max = 255)
     private String upc;
     private Integer quantityOnHand;
+
+    @OneToMany(mappedBy = "beer")
+    private Set<BeerOrderLine> beerOrderLine;
 
     @NotNull
     private BigDecimal price;
