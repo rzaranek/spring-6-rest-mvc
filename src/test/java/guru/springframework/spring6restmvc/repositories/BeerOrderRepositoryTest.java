@@ -2,6 +2,7 @@ package guru.springframework.spring6restmvc.repositories;
 
 import guru.springframework.spring6restmvc.entities.Beer;
 import guru.springframework.spring6restmvc.entities.BeerOrder;
+import guru.springframework.spring6restmvc.entities.BeerOrderShipment;
 import guru.springframework.spring6restmvc.entities.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class BeerOrderRepositoryTest {
 
+    public static final String TRUCK_NR = "nr123";
     @Autowired
     private BeerOrderRepository beerOrderRepository;
 
@@ -39,10 +41,16 @@ class BeerOrderRepositoryTest {
         BeerOrder beerOrder = BeerOrder.builder()
                 .customer(testCustomer)
                 .customerRef("test beer order")
+                .beerOrderShipment(BeerOrderShipment.builder()
+                        .trackingNumber(TRUCK_NR)
+                        .build())
                 .build();
 
         BeerOrder savedBeerOrder = beerOrderRepository.save(beerOrder);
 
         assertThat(savedBeerOrder.getCustomer().getBeerOrders().size()).isEqualTo(1);
+        assertThat(beerOrder.getBeerOrderShipment().getTrackingNumber()).isEqualTo(TRUCK_NR);
+        assertNotNull(beerOrder.getBeerOrderShipment().getId());
+        assertThat(savedBeerOrder.getBeerOrderShipment().getBeerOrder()).isEqualTo(savedBeerOrder);
     }
 }
